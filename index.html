@@ -81,7 +81,7 @@
       }
       const cft = (((Math.pow((1 + monthlyInterestRate), numberOfPayments) - 1) /
                             (monthlyInterestRate * Math.pow((1 + monthlyInterestRate), numberOfPayments)))-1)*100;
-      paymentPlanTable.innerHTML += `<tr><td>TNA ${interestRate*100}%</td><td>Interés Total $${(monthlyPayment * numberOfPayments - loanAmount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td><td></td><td></td><td>Importe Total $${(monthlyPayment * numberOfPayments).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>`;
+      paymentPlanTable.innerHTML += `<tr><td>TNA ${(interestRate*100).toFixed(0)}%</td><td>Interés Total $${(monthlyPayment * numberOfPayments - loanAmount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td><td></td><td></td><td>Importe Total $${(monthlyPayment * numberOfPayments).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>`;
     }
   </script>
 </body>
