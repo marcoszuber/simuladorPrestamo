@@ -74,8 +74,9 @@
         const formattedInterest = interest.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const formattedPrincipal = principal.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const formattedRemainingBalance = remainingBalance.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const formattedmonthlyPayment = monthlyPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-        const newRow = `<tr><td>${i}</td><td>${formattedInterest}</td><td>${formattedPrincipal}</td><td>${monthlyPayment.toFixed(2)}</td><td>${formattedRemainingBalance}</td></tr>`;
+        const newRow = `<tr><td>${i}</td><td>${formattedInterest}</td><td>${formattedPrincipal}</td><td>${formattedmonthlyPayment}</td><td>${formattedRemainingBalance}</td></tr>`;
 
         paymentPlanTable.innerHTML += newRow;
       }
