@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Préstamos</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="calculator bg-white p-4 rounded shadow">
+      <h1>Calculadora de Préstamos</h1>
+      <div class="form-group">
+        <label for="loan-amount">Monto del Préstamo:</label>
+        <input type="number" class="form-control" id="loan-amount" placeholder="Ingrese el monto">
+      </div>
+      <div class="form-group">
+        <label for="interest-rate">Tasa de Interés (% anual):</label>
+        <input type="number" class="form-control" id="interest-rate" placeholder="Ingrese la tasa de interés (tasa de referencia 174%)">
+      </div>
+      <div class="form-group">
+        <label for="loan-term">Plazo (en meses):</label>
+        <select class="form-control" id="loan-term">
+          <option value="3">3 meses</option>
+          <option value="6">6 meses</option>
+          <option value="12">12 meses</option>
+          <option value="18">18 meses</option>
+          <option value="24">24 meses</option>
+        </select>
+      </div>
+      <button onclick="calculateLoan()" class="btn btn-primary">Calcular</button>
+
+      <div class="results mt-4">
+        <h2>Plan de Pagos</h2>
+        <table id="payment-plan" class="table">
+          <!-- Aquí se generará dinámicamente el plan de pagos -->
+        </table>
+
+        <div id="cft-tna">
+          <!-- Aquí se mostrará el CFT y TNA -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Incluyendo el script de Bootstrap (jQuery y Popper.js son requeridos por Bootstrap) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    function calculateLoan() {
+      const loanAmount = parseFloat(document.getElementById('loan-amount').value);
+      const interestRate = parseFloat(document.getElementById('interest-rate').value/100);
+      const loanTerm = parseInt(document.getElementById('loan-term').value);
+      const periodsPerYear = 12; // Para un cálculo mensual
+
+      const monthlyInterestRate = interestRate / 12;
+      const numberOfPayments = loanTerm;
+      const discountFactor = ((Math.pow((1 + monthlyInterestRate), numberOfPayments) - 1) /
+                            (monthlyInterestRate * Math.pow((1 + monthlyInterestRate), numberOfPayments)));
+
+      const monthlyPayment = loanAmount / discountFactor;
+
+      let remainingBalance = loanAmount;
+      const paymentPlanTable = document.getElementById('payment-plan');
+      paymentPlanTable.innerHTML = '<tr><th>Cuota</th><th>Interés</th><th>Amortización</th><th>Couta</th><th>Saldo Pendiente</th></tr>';
+      paymentPlanTable.innerHTML += `<tr><td>0</td><td>-</td><td>-</td><td>-</td><td>${remainingBalance.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>`;
+
+      for (let i = 1; i <= numberOfPayments; i++) {
+        const interest = remainingBalance * monthlyInterestRate;
+        const principal = monthlyPayment - interest;
+        remainingBalance -= principal;
+
+        const formattedInterest = interest.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const formattedPrincipal = principal.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const formattedRemainingBalance = remainingBalance.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        const newRow = `<tr><td>${i}</td><td>${formattedInterest}</td><td>${formattedPrincipal}</td><td>${monthlyPayment.toFixed(2)}</td><td>${formattedRemainingBalance}</td></tr>`;
+
+        paymentPlanTable.innerHTML += newRow;
+      }
+      const cft = (((Math.pow((1 + monthlyInterestRate), numberOfPayments) - 1) /
+                            (monthlyInterestRate * Math.pow((1 + monthlyInterestRate), numberOfPayments)))-1)*100;
+      paymentPlanTable.innerHTML += `<tr><td>TNA ${interestRate*100}%</td><td>Interés Total $${(monthlyPayment * numberOfPayments - loanAmount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td><td></td><td></td><td>Importe Total $${(monthlyPayment * numberOfPayments).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>`;
+    }
+  </script>
+</body>
+</html>
